@@ -3,23 +3,22 @@ package com.example.android.newsapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     List<News> news;
+    RecyclerViewClickListener listener;
 
-    NewsAdapter(List<News> news) {
+    NewsAdapter(List<News> news, RecyclerViewClickListener listener) {
         this.news = news;
+        this.listener = listener;
     }
 
     @NonNull
@@ -29,7 +28,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.news_item, parent, false);
 
-        return new NewsViewHolder(v);
+        return new NewsViewHolder(v, listener);
     }
 
     @Override
@@ -48,16 +47,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         return news.size();
     }
 
-    static class NewsViewHolder extends RecyclerView.ViewHolder {
+    static class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView sectionName;
         RatingBar ratingStars;
         TextView ratingValue;
         TextView author;
         TextView date;
+        RecyclerViewClickListener listener;
 
-
-        NewsViewHolder(View v) {
+        NewsViewHolder(View v, RecyclerViewClickListener listener) {
             super(v);
             title = v.findViewById(R.id.card_title);
             sectionName = v.findViewById(R.id.section_name);
@@ -65,6 +64,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             ratingValue = v.findViewById(R.id.rating_value);
             author = v.findViewById(R.id.author);
             date = v.findViewById(R.id.publication_date);
+            this.listener = listener;
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            listener.onClick(v, getAdapterPosition());
         }
     }
 }
