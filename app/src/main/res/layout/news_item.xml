@@ -41,7 +41,7 @@
 
             <LinearLayout
                 android:id="@+id/rating"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
@@ -66,16 +66,21 @@
                     android:textSize="14sp"
                     tools:text="3" />
 
-                <TextView
-                    android:id="@+id/section_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:background="@drawable/news_section_background"
-                    android:textColor="@android:color/white"
-                    tools:text="Film" />
-
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/section_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/card_title"
+                android:layout_marginRight="24dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/news_section_background"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                tools:text="Film" />
 
             <TextView
                 android:id="@+id/author"
