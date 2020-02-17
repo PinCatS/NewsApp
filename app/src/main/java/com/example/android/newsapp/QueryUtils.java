@@ -32,17 +32,33 @@ final class QueryUtils {
             int curentPage = newsQueryResponse.getInt("currentPage");
 
             JSONArray results = newsQueryResponse.getJSONArray("results");
-            JSONObject newsObject = null;
-            JSONObject fields = null;
+            JSONObject newsObject;
+            JSONObject fields;
             JSONArray tags = null;
+            String contributorName = "";
             for (int i = 0; i < results.length(); i++) {
                 newsObject = results.getJSONObject(i);
                 fields = newsObject.getJSONObject("fields");
+
+                /*
+                * Retrieve contributors names.
+                * There can be 0 or more contributors
+                * if > 1, it shows only the first one and appends " and others"
+                * */
+                tags = newsObject.getJSONArray("tags");
+                if (tags.length() != 0) {
+                    contributorName = tags.getJSONObject(0).getString("webTitle");
+                }
+
+                if (tags.length() > 1) {
+                    contributorName += " and others";
+                }
+
                 news.add(new News(newsObject.getString("webTitle"),
                             newsObject.getString("sectionName"),
                             newsObject.getString("webUrl"),
                             fields.getInt("starRating"),
-                            " ",
+                            contributorName,
                             newsObject.getString("webPublicationDate")));
             }
 

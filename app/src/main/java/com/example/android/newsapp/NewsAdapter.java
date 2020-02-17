@@ -1,5 +1,6 @@
 package com.example.android.newsapp;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +39,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.sectionName.setText(news.getSectionName());
         holder.ratingStars.setRating(news.getRating());
         holder.ratingValue.setText(String.format("%.1f", news.getRating()));
-        holder.author.setText(news.getAuthorName());
-        holder.date.setText(news.getAuthorName());
+
+        if (TextUtils.isEmpty(news.getAuthorName())) {
+            holder.author.setVisibility(View.GONE);
+        } else {
+            holder.author.setText(news.getAuthorName());
+        }
+        holder.date.setText(news.getPublicationDate());
     }
 
     @Override
