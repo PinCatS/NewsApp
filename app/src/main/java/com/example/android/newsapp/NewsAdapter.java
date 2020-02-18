@@ -29,7 +29,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.news_item, parent, false);
 
-        return new NewsViewHolder(v, listener);
+        return new NewsViewHolder(v, listener, news);
     }
 
     @Override
@@ -53,6 +53,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         return news.size();
     }
 
+    public void clear() {
+        news.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<News> news) {
+        this.news.addAll(news);
+        notifyDataSetChanged();
+    }
+
     static class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView sectionName;
@@ -61,8 +71,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         TextView author;
         TextView date;
         RecyclerViewClickListener listener;
+        List<News> news;
 
-        NewsViewHolder(View v, RecyclerViewClickListener listener) {
+        NewsViewHolder(View v, RecyclerViewClickListener listener, List<News> news) {
             super(v);
             title = v.findViewById(R.id.card_title);
             sectionName = v.findViewById(R.id.section_name);
@@ -76,7 +87,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         @Override
         public void onClick(View v) {
-            listener.onClick(v, getAdapterPosition());
+            listener.onClick(v, getAdapterPosition(), news);
         }
     }
 }

@@ -5,23 +5,26 @@ public class News {
     private String mTitle;
     private String mSectionName;
     private String mUrl;
+    private String mThumbnailUrl;
     private float mRating;
     private String mAuthorName;
     private String mPublicationDate;
 
-    public News(String title, String sectionName, String url) {
+    public News(String title, String sectionName, String url, String thumbnailUrl) {
         this.mTitle = title;
         this.mSectionName = sectionName;
         this.mUrl = url;
+        this.mThumbnailUrl = thumbnailUrl;
     }
 
-    public News(String title, String sectionName, String url, float rating, String authorName, String publicationDate) {
+    public News(String title, String sectionName, String url, String thumbnailUrl, float rating, String authorName, String publicationDate) {
         this.mTitle = title;
         this.mSectionName = sectionName;
         this.mAuthorName = authorName;
         this.mPublicationDate = publicationDate;
         this.mRating = rating;
         this.mUrl = url;
+        this.mThumbnailUrl = thumbnailUrl;
     }
 
     public String getTitle() {

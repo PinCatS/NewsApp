@@ -1,13 +1,23 @@
 package com.example.android.newsapp;
 
-        import android.util.Log;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import java.util.ArrayList;
-        import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 final class QueryUtils {
 
@@ -57,6 +67,7 @@ final class QueryUtils {
                 news.add(new News(newsObject.getString("webTitle"),
                             newsObject.getString("sectionName"),
                             newsObject.getString("webUrl"),
+                        fields.getString("thumbnail"),
                             fields.getInt("starRating"),
                             contributorName,
                             newsObject.getString("webPublicationDate")));
@@ -64,13 +75,139 @@ final class QueryUtils {
 
         }
         catch(JSONException e) {
-            Log.e(LOG_TAG, "Failed to extract news from JSON response: " + e);
+            Log.e(LOG_TAG, "Failed to extract news from JSON response: ", e);
         }
 
         return news;
     }
 
-    public static List<News> fetchNewsData(String queryUrl) {
-        return extractNews(NEWS_JSON_SAMPLE);
+    private static URL createUrl(String url) {
+
+        URL urlObject = null;
+
+        try {
+            urlObject = new URL(url);
+        } catch (MalformedURLException e) {
+            Log.e(LOG_TAG, "Building URL object failed: ", e);
+        }
+
+        return urlObject;
+    }
+
+    private static String makeHttpRequest(URL url) throws IOException {
+        String jsonString = null;
+
+        if (url == null) {
+            return null;
+        }
+
+        HttpURLConnection connection = null;
+        InputStream is = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            if (connection.getResponseCode() == 200) {
+                is = connection.getInputStream();
+                jsonString = readFromInputStream(is);
+            } else {
+                Log.e(LOG_TAG, "Bad response from the server: " + connection.getResponseCode());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to connect: ", e);
+        } finally {
+            connection.disconnect();
+
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        return jsonString;
+    }
+
+    private static Bitmap makeHttpRequestForImage(URL url) throws IOException {
+        Bitmap img = null;
+
+        if (url == null) {
+            return null;
+        }
+
+        HttpURLConnection connection = null;
+        InputStream is = null;
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            if (connection.getResponseCode() == 200) {
+                is = connection.getInputStream();
+                if (is != null) {
+                    img = BitmapFactory.decodeStream(is);
+                } else {
+                    Log.e(LOG_TAG, "InputStream for thumbnail is empty");
+                }
+            } else {
+                Log.e(LOG_TAG, "Bad response from the server while fetching thumbnail: " + connection.getResponseCode());
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to connect while fetching thumbnail: ", e);
+        } finally {
+            connection.disconnect();
+
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        return img;
+    }
+
+    private static String readFromInputStream(InputStream is) throws IOException {
+        BufferedReader bufferedReader;
+        StringBuilder output = new StringBuilder();
+
+        bufferedReader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+
+        String line = bufferedReader.readLine();
+        while (line != null) {
+            output.append(line);
+            line = bufferedReader.readLine();
+        }
+
+        return output.toString();
+    }
+
+    static List<News> fetchNewsData(String queryUrl) {
+
+        URL url = createUrl(queryUrl);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to make the HTTP request", e);
+        }
+
+        return extractNews(jsonResponse);
+    }
+
+    static Bitmap fetchThumbnail(String queryUrl) {
+
+        URL url = createUrl(queryUrl);
+
+        Bitmap img = null;
+        try {
+            img = makeHttpRequestForImage(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Failed to make the HTTP request for thumbnail", e);
+        }
+
+        return img;
     }
 }
