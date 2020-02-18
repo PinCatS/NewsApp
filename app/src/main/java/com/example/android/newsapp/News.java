@@ -50,4 +50,8 @@ public class News {
     public String getUrl() {
         return mUrl;
     }
+
+    public String getThumbnailUrl() {
+        return mThumbnailUrl;
+    }
 }

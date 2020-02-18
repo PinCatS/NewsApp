@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -46,6 +47,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             holder.author.setText(news.getAuthorName());
         }
         holder.date.setText(news.getPublicationDate());
+
+        new ImageDownloaderTask(holder.thumbnail).execute(news.getThumbnailUrl());
     }
 
     @Override
@@ -70,6 +73,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         TextView ratingValue;
         TextView author;
         TextView date;
+        ImageView thumbnail;
         RecyclerViewClickListener listener;
         List<News> news;
 
@@ -81,6 +85,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             ratingValue = v.findViewById(R.id.rating_value);
             author = v.findViewById(R.id.author);
             date = v.findViewById(R.id.publication_date);
+            thumbnail = v.findViewById(R.id.card_image);
             this.listener = listener;
             v.setOnClickListener(this);
         }
