@@ -29,6 +29,7 @@ class NewsAsyncTaskLoader extends AsyncTaskLoader<List<News>> {
         }
 
         List<News> result = QueryUtils.fetchNewsData(mUrl);
+        Log.v("NewsAsyncTaskLoader", "TEST: loadInBackground results: " + result.size());
         return result;
     }
 

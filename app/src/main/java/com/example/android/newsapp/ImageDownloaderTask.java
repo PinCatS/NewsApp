@@ -3,6 +3,7 @@ package com.example.android.newsapp;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
@@ -16,7 +17,15 @@ class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        return QueryUtils.fetchThumbnail(params[0]);
+        Log.v("ImageDownloaderTask", "Thumbnail url: " + params[0]);
+        StringBuilder builder = new StringBuilder(params[0]);
+
+        // Avoid java.io.IOException: Cleartext HTTP traffic to media.guim.co.uk not permitted
+        if (params[0].startsWith("http:")) {
+            builder.replace(0, 5, "https:");
+        }
+
+        return QueryUtils.fetchThumbnail(builder.toString());
     }
 
     @Override
