@@ -22,16 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List<News>> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID = 0;
     private static final String QUERY_URL = "https://content.guardianapis.com/search?q=format=json&page-size=10&section=film&show-fields=starRating,thumbnail&show-tags=contributor&api-key=f5bac5c1-be69-4049-a2f1-9125f0403108";
 
     private NewsAdapter mNewsAdapter;
-
-    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +80,8 @@ public class MainActivity extends AppCompatActivity
             ProgressBar progressBar = findViewById(R.id.loading_spinner);
             progressBar.setVisibility(View.GONE);
 
-            emptyView = findViewById(R.id.empty_state);
-            emptyView.setText("No connectivity");
+            TextView emptyView = findViewById(R.id.empty_state);
+            emptyView.setText(getString(R.string.no_connectivity));
         }
     }
 
@@ -102,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         TextView emptyView = findViewById(R.id.empty_state);
 
         if (news.isEmpty()) {
-            emptyView.setText("No news found");
+            emptyView.setText(getString(R.string.no_news_found));
         } else {
             emptyView.setVisibility(View.GONE);
         }
@@ -113,9 +110,9 @@ public class MainActivity extends AppCompatActivity
         Log.v(LOG_TAG, "TEST: onLoadFinished: " + news.size());
         mNewsAdapter.clear();
 
-        // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
-        // data set. This will trigger the ListView to update.
-        if (news != null && !news.isEmpty()) {
+        // If there is a valid list of {@link New}s, then add them to the adapter's
+        // data set.
+        if (!news.isEmpty()) {
             mNewsAdapter.addAll(news);
         }
     }

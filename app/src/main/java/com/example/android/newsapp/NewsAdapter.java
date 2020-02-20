@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -50,7 +53,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.ratingValue.setVisibility(View.GONE);
         } else {
             holder.ratingStars.setRating(news.getRating());
-            holder.ratingValue.setText(String.format("%.1f", news.getRating()));
+            holder.ratingValue.setText(String.format(Locale.US, "%.1f", news.getRating()));
         }
 
         if (TextUtils.isEmpty(news.getAuthorName())) {
@@ -58,13 +61,27 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             holder.author.setText(news.getAuthorName());
         }
-        holder.date.setText(news.getPublicationDate());
+
+        holder.date.setText(formatDate(news.getPublicationDate()));
 
         if (news.getThumbnailUrl() != null) {
             new ImageDownloaderTask(holder.thumbnail).execute(news.getThumbnailUrl());
         } else {
             holder.thumbnail.setVisibility(View.GONE);
         }
+    }
+
+    private String formatDate(String dateString) {
+        String[] d = dateString.split("[-TZ:]");
+        Date date = new Date(Integer.parseInt(d[0]) - 1900,
+                Integer.parseInt(d[1]),
+                Integer.parseInt(d[2]),
+                Integer.parseInt(d[3]),
+                Integer.parseInt(d[4]),
+                Integer.parseInt(d[5]));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E dd MMM y kk.mm a", Locale.US);
+        return dateFormat.format(date);
     }
 
     public void clear() {
