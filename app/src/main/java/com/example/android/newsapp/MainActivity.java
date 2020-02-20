@@ -1,10 +1,15 @@
 package com.example.android.newsapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     private static final String QUERY_URL = "https://content.guardianapis.com/search?q=format=json&page-size=10&section=film&show-fields=starRating,thumbnail&show-tags=contributor&api-key=f5bac5c1-be69-4049-a2f1-9125f0403108";
 
     private NewsAdapter mNewsAdapter;
+
+    private TextView emptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +70,22 @@ public class MainActivity extends AppCompatActivity
         Bundle loaderArgs = new Bundle();
         loaderArgs.putString("QUERY_URL", QUERY_URL);
 
-        getSupportLoaderManager().initLoader(LOADER_ID, loaderArgs, this);
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        if (isConnected) {
+            getSupportLoaderManager().initLoader(LOADER_ID, loaderArgs, this);
+        } else {
+            ProgressBar progressBar = findViewById(R.id.loading_spinner);
+            progressBar.setVisibility(View.GONE);
+
+            emptyView = findViewById(R.id.empty_state);
+            emptyView.setText("No connectivity");
+        }
     }
 
 
@@ -76,6 +98,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<News>> loader, List<News> news) {
+
+        TextView emptyView = findViewById(R.id.empty_state);
+
+        if (news.isEmpty()) {
+            emptyView.setText("No news found");
+        } else {
+            emptyView.setVisibility(View.GONE);
+        }
+
+        ProgressBar progressBar = findViewById(R.id.loading_spinner);
+        progressBar.setVisibility(View.GONE);
+
         Log.v(LOG_TAG, "TEST: onLoadFinished: " + news.size());
         mNewsAdapter.clear();
 
