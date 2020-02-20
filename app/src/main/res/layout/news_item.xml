@@ -31,8 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/card_image"
-                android:layout_marginBottom="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:paddingStart="16dp"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="18sp"
@@ -40,66 +40,70 @@
                 tools:text="Zola review – stylish viral tweet-based sex and crime caper" />
 
             <LinearLayout
-                android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_below="@+id/card_title">
+                android:layout_below="@+id/card_title"
+                android:orientation="vertical">
 
-                <RatingBar
-                    android:id="@+id/rating_indicator"
-                    style="?android:attr/ratingBarStyleSmall"
+                <LinearLayout
+                    android:id="@+id/rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:numStars="5"
-                    tools:rating="3"/>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RatingBar
+                        android:id="@+id/rating_indicator"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:numStars="5"
+                        tools:rating="3" />
+
+                    <TextView
+                        android:id="@+id/rating_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingStart="8dp"
+                        android:textColor="@color/colorTextSecondary"
+                        android:textSize="14sp"
+                        tools:text="3" />
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/rating_value"
+                    android:id="@+id/author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorTextSecondary"
-                    android:paddingStart="8dp"
-                    android:textSize="14sp"
-                    tools:text="3" />
+                    android:paddingStart="16dp"
+                    android:textSize="16sp"
+                    tools:text="Benjamin Lee" />
 
+                <TextView
+                    android:id="@+id/publication_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="12sp"
+                    tools:text="Fri 24 Jan 2020 23.57 GMT" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/section_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_below="@+id/card_title"
+                android:layout_alignParentEnd="true"
                 android:layout_marginRight="24dp"
+                android:background="@drawable/news_section_background"
+                android:gravity="center"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/news_section_background"
                 android:textColor="@android:color/white"
-                android:gravity="center"
                 tools:text="Film" />
-
-            <TextView
-                android:id="@+id/author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/section_name"
-                android:paddingStart="16dp"
-                android:textSize="16sp"
-                tools:text="Benjamin Lee" />
-
-            <TextView
-                android:id="@+id/publication_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/author"
-                android:paddingStart="16dp"
-                android:textColor="@color/colorTextSecondary"
-                android:textSize="12sp"
-                tools:text="Fri 24 Jan 2020 23.57 GMT" />
 
         </RelativeLayout>
 
