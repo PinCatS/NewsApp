@@ -23,11 +23,6 @@ final class QueryUtils {
 
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-    static int pages;
-    static int pageSize;
-    static int newsCount;
-    static int currentPage = 1;
-
     private QueryUtils() {
     }
 
@@ -38,11 +33,6 @@ final class QueryUtils {
         try {
             JSONObject newsQueryJson = new JSONObject(jsonString);
             JSONObject newsQueryResponse = newsQueryJson.getJSONObject("response");
-
-            newsCount = newsQueryResponse.getInt("total");
-            pages = newsQueryResponse.getInt("pages");
-            pageSize = newsQueryResponse.getInt("pageSize");
-            currentPage = newsQueryResponse.getInt("currentPage");
 
             JSONArray results = newsQueryResponse.getJSONArray("results");
             JSONObject newsObject;
@@ -90,12 +80,6 @@ final class QueryUtils {
                 // Clean up
                 thumbnailUrl = null;
                 rating = -1;
-            }
-
-            //* If we have more items to load in the future, insert null as the last element
-            //* to handle loading indicator during the scroll
-            if (currentPage < pages) {
-                news.add(null);
             }
         }
         catch(JSONException e) {
@@ -233,21 +217,5 @@ final class QueryUtils {
         }
 
         return img;
-    }
-
-    public static int getPages() {
-        return pages;
-    }
-
-    public static int getPageSize() {
-        return pageSize;
-    }
-
-    public static int getNewsCount() {
-        return newsCount;
-    }
-
-    public static int getCurrentPage() {
-        return currentPage;
     }
 }

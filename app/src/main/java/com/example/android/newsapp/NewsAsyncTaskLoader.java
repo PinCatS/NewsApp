@@ -11,7 +11,7 @@ import java.util.List;
 
 class NewsAsyncTaskLoader extends AsyncTaskLoader<List<News>> {
 
-    String mUrl;
+    private String mUrl;
 
     public NewsAsyncTaskLoader(Context context, String url) {
         super(context);
@@ -21,16 +21,13 @@ class NewsAsyncTaskLoader extends AsyncTaskLoader<List<News>> {
     @Nullable
     @Override
     public List<News> loadInBackground() {
-
         Log.v("NewsAsyncTaskLoader", "TEST: loadInBackground: " + mUrl);
 
         if (TextUtils.isEmpty(mUrl)) {
             return null;
         }
 
-        List<News> result = QueryUtils.fetchNewsData(mUrl);
-        Log.v("NewsAsyncTaskLoader", "TEST: loadInBackground results: " + result.size());
-        return result;
+        return QueryUtils.fetchNewsData(mUrl);
     }
 
     @Override
