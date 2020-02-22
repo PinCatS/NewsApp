@@ -20,7 +20,7 @@ The app uses the Gradle build system. To build this project, use the "gradlew bu
 ## More todo
 Initially I tried to implement infinite scrolling when user scrolls and data is retrieved from the internet gradually while all available data is retrived.
 But I encountered differenet issues related to updating view in a beautiful way as well as maintain appropriate number of items during the scroll not to consume a lot of memory.
-Bacuse of the deadline, I decided to switch to the simpler version where there is limited number of news which can be retrived and the number is controlled by preference.
+Bacause of the deadline, I decided to switch to the simpler version where there is limited number of news which can be retrived and the number is controlled by preference.
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)
