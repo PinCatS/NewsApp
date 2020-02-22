@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity
             ProgressBar progressBar = findViewById(R.id.loading_spinner);
             progressBar.setVisibility(View.GONE);
 
-            TextView emptyView = findViewById(R.id.empty_state);
-            emptyView.setText(getString(R.string.no_connectivity));
+            mEmptyView = findViewById(R.id.empty_state);
+            mEmptyView.setText(getString(R.string.no_connectivity));
         }
     }
 
