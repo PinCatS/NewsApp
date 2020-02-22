@@ -74,7 +74,7 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String formatDate(String dateString) {
         String[] d = dateString.split("[-TZ:]");
         Date date = new Date(Integer.parseInt(d[0]) - 1900,
-                Integer.parseInt(d[1]),
+                Integer.parseInt(d[1]) - 1,
                 Integer.parseInt(d[2]),
                 Integer.parseInt(d[3]),
                 Integer.parseInt(d[4]),
