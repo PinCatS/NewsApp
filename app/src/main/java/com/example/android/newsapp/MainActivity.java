@@ -101,7 +101,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (key.equals(getString(R.string.settings_page_size_key))) {
+        if (key.equals(getString(R.string.settings_page_size_key)) ||
+                key.equals(getString(R.string.settings_order_by_key)) ||
+                key.equals(getString(R.string.settings_section_key))) {
             // Clear the ListView as a new query will be kicked off
             mNewsAdapter.clear();
 
@@ -135,6 +137,11 @@ public class MainActivity extends AppCompatActivity
                 getString(R.string.settings_order_by_default)
         );
 
+        String section = sharedPrefs.getString(
+                getString(R.string.settings_section_key),
+                getString(R.string.settings_section_default)
+        );
+
         // parse breaks apart the URI string that's passed into its parameter
         Uri baseUri = Uri.parse(QUERY_URL);
 
@@ -142,7 +149,7 @@ public class MainActivity extends AppCompatActivity
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
         // Append query parameter and its value.
-        uriBuilder.appendQueryParameter("section", "film");
+        uriBuilder.appendQueryParameter("section", section);
         uriBuilder.appendQueryParameter("page-size", pageSize);
         uriBuilder.appendQueryParameter("order-by", orderBy);
 

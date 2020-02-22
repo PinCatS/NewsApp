@@ -22,4 +22,22 @@
     <!-- Label for order-by oldest option -->
     <string name="settings_order_by_oldest_label">Oldest</string>
     <string name="settings_order_by_oldest_value" translatable="false">oldest</string>
+
+    <!-- Strings For Section Preference -->
+    <string name="settings_section_label">Section</string>
+    <string name="settings_section_key" translatable="false">section</string>
+    <string name="settings_section_default" translatable="false">@string/settings_section_film_value</string>
+
+    <!-- Label for section world news option -->
+    <string name="settings_section_world_news_label">World news</string>
+    <string name="settings_section_world_news_value" translatable="false">world</string>
+
+    <!-- Label for section film option -->
+    <string name="settings_section_film_label">Films</string>
+    <string name="settings_section_film_value" translatable="false">film</string>
+
+    <!-- Label for section book option -->
+    <string name="settings_section_book_label">Books</string>
+    <string name="settings_section_book_value" translatable="false">books</string>
+
 </resources>
