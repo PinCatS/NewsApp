@@ -2,10 +2,12 @@ package com.example.android.newsapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,18 +26,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<News>> {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<List<News>>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID = 0;
-    private static final String QUERY_URL = "https://content.guardianapis.com/search?q=format=json&page-size=10&section=film&show-fields=starRating,thumbnail&show-tags=contributor&api-key=f5bac5c1-be69-4049-a2f1-9125f0403108";
+    private static final String QUERY_URL = "https://content.guardianapis.com/search?q=format=json&show-fields=starRating,thumbnail&show-tags=contributor&api-key=f5bac5c1-be69-4049-a2f1-9125f0403108";
 
     private NewsAdapter mNewsAdapter;
+
+    TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Obtain a reference to the SharedPreferences file for this app
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // And register to be notified of preference changes
+        // So we know when the user has adjusted the query settings
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         /*
          * On card click, user moves to Details activity
@@ -87,23 +99,65 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals(getString(R.string.settings_page_size_key))) {
+            // Clear the ListView as a new query will be kicked off
+            mNewsAdapter.clear();
+
+            // Hide the empty state text view as the loading indicator will be displayed
+            mEmptyView.setVisibility(View.GONE);
+
+            // Show the loading indicator while new data is being fetched
+            View loadingIndicator = findViewById(R.id.loading_spinner);
+            loadingIndicator.setVisibility(View.VISIBLE);
+
+            // Restart the loader to re-query the news as the query settings have been updated
+            getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+        }
+    }
+
 
     @NonNull
     @Override
     public Loader<List<News>> onCreateLoader(int id, @Nullable Bundle args) {
         Log.v(LOG_TAG, "TEST: onCreateLoader");
-        return new NewsAsyncTaskLoader(this, args.getString("QUERY_URL"));
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // getString retrieves a String value from the preferences. The second parameter is the default value for this preference.
+        String pageSize = sharedPrefs.getString(
+                getString(R.string.settings_page_size_key),
+                getString(R.string.settings_page_size_default));
+
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default)
+        );
+
+        // parse breaks apart the URI string that's passed into its parameter
+        Uri baseUri = Uri.parse(QUERY_URL);
+
+        // buildUpon prepares the baseUri that we just parsed so we can add query parameters to it
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        // Append query parameter and its value.
+        uriBuilder.appendQueryParameter("section", "film");
+        uriBuilder.appendQueryParameter("page-size", pageSize);
+        uriBuilder.appendQueryParameter("order-by", orderBy);
+
+        return new NewsAsyncTaskLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<News>> loader, List<News> news) {
 
-        TextView emptyView = findViewById(R.id.empty_state);
+        mEmptyView = findViewById(R.id.empty_state);
 
         if (news.isEmpty()) {
-            emptyView.setText(getString(R.string.no_news_found));
+            mEmptyView.setText(getString(R.string.no_news_found));
         } else {
-            emptyView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.GONE);
         }
 
         ProgressBar progressBar = findViewById(R.id.loading_spinner);
