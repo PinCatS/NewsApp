@@ -43,6 +43,13 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return news.size();
     }
 
+    /*
+     * Binds data to the view.
+     *
+     * If any data is unavailable, the view is set to GONE
+     *
+     * There is an ImageDownloaderTask which asynchronously retrieve news thumbnails if available
+     * */
     private void populateNewsItems(NewsViewHolder holder, int position) {
         News news = this.news.get(position);
         holder.title.setText(news.getTitle());
@@ -71,6 +78,9 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    /*
+     * Date object was used for date formatting to support older android api
+     * */
     private String formatDate(String dateString) {
         String[] d = dateString.split("[-TZ:]");
         Date date = new Date(Integer.parseInt(d[0]) - 1900,
@@ -84,12 +94,12 @@ public class NewsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return dateFormat.format(date);
     }
 
-    public void clear() {
+    void clear() {
         news.clear();
         notifyDataSetChanged();
     }
 
-    public void addAll(List<News> news) {
+    void addAll(List<News> news) {
         this.news.addAll(news);
         notifyDataSetChanged();
     }

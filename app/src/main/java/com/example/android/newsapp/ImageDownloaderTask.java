@@ -7,10 +7,14 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
+
+/*
+ * Upload news thumbnails in async way
+ * */
 class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
 
-    public ImageDownloaderTask(ImageView imageView) {
+    ImageDownloaderTask(ImageView imageView) {
         imageViewReference = new WeakReference<>(imageView);
     }
 

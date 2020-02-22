@@ -33,14 +33,15 @@ final class QueryUtils {
         try {
             JSONObject newsQueryJson = new JSONObject(jsonString);
             JSONObject newsQueryResponse = newsQueryJson.getJSONObject("response");
-
             JSONArray results = newsQueryResponse.getJSONArray("results");
+
             JSONObject newsObject;
-            JSONObject fields = null;
-            JSONArray tags = null;
+            JSONObject fields;
+            JSONArray tags;
             String contributorName = "";
             String thumbnailUrl = null;
             int rating = -1;
+
             for (int i = 0; i < results.length(); i++) {
                 newsObject = results.getJSONObject(i);
 

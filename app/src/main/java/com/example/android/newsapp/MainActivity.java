@@ -8,7 +8,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +29,12 @@ public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<News>>,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int LOADER_ID = 0;
-    private static final String QUERY_URL = "https://content.guardianapis.com/search?q=format=json&show-fields=starRating,thumbnail&show-tags=contributor&api-key=f5bac5c1-be69-4049-a2f1-9125f0403108";
+    private static final String QUERY_URL =
+            "https://content.guardianapis.com/search?q=format=json&show-fields=starRating,thumbnail&show-tags=contributor&api-key=f5bac5c1-be69-4049-a2f1-9125f0403108";
 
     private NewsAdapter mNewsAdapter;
-
-    TextView mEmptyView;
+    private TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +47,10 @@ public class MainActivity extends AppCompatActivity
         // So we know when the user has adjusted the query settings
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        /*
-         * On card click, user moves to Details activity
-         * */
+        // On card click, user moves to Details activity
         RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position, List<News> news) {
-                Log.v(LOG_TAG, "onClick item position: " + position);
                 News n = news.get(position);
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(n.getUrl())));
             }
@@ -71,16 +66,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(mNewsAdapter);
 
 
-        // Building URL
-        /*Uri baseUri = Uri.parse(QUERY_URL);
-        Uri.Builder uriBuilder = baseUri.buildUpon();
-        uriBuilder.appendQueryParameter("page", Integer.toString());*/
-
-        // Prepare the loader.  Either re-connect with an existing one,
-        // or start a new one.
-        Bundle loaderArgs = new Bundle();
-        loaderArgs.putString("QUERY_URL", QUERY_URL);
-
+        // check connectivity and do request only if connectivity is available
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -89,7 +75,7 @@ public class MainActivity extends AppCompatActivity
                 activeNetwork.isConnectedOrConnecting();
 
         if (isConnected) {
-            getSupportLoaderManager().initLoader(LOADER_ID, loaderArgs, this);
+            getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         } else {
             ProgressBar progressBar = findViewById(R.id.loading_spinner);
             progressBar.setVisibility(View.GONE);
@@ -104,6 +90,7 @@ public class MainActivity extends AppCompatActivity
         if (key.equals(getString(R.string.settings_page_size_key)) ||
                 key.equals(getString(R.string.settings_order_by_key)) ||
                 key.equals(getString(R.string.settings_section_key))) {
+
             // Clear the ListView as a new query will be kicked off
             mNewsAdapter.clear();
 
@@ -123,7 +110,6 @@ public class MainActivity extends AppCompatActivity
     @NonNull
     @Override
     public Loader<List<News>> onCreateLoader(int id, @Nullable Bundle args) {
-        Log.v(LOG_TAG, "TEST: onCreateLoader");
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -170,7 +156,6 @@ public class MainActivity extends AppCompatActivity
         ProgressBar progressBar = findViewById(R.id.loading_spinner);
         progressBar.setVisibility(View.GONE);
 
-        Log.v(LOG_TAG, "TEST: onLoadFinished: " + news.size());
         mNewsAdapter.clear();
 
         // If there is a valid list of {@link New}s, then add them to the adapter's
@@ -182,7 +167,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<News>> loader) {
-        Log.v(LOG_TAG, "TEST: onLoaderReset");
         mNewsAdapter.clear();
     }
 

@@ -1,6 +1,6 @@
 package com.example.android.newsapp;
 
-public class News {
+class News {
 
     private String mTitle;
     private String mSectionName;
@@ -10,14 +10,8 @@ public class News {
     private String mAuthorName;
     private String mPublicationDate;
 
-    public News(String title, String sectionName, String url, String thumbnailUrl) {
-        this.mTitle = title;
-        this.mSectionName = sectionName;
-        this.mUrl = url;
-        this.mThumbnailUrl = thumbnailUrl;
-    }
 
-    public News(String title, String sectionName, String url, String thumbnailUrl, float rating, String authorName, String publicationDate) {
+    News(String title, String sectionName, String url, String thumbnailUrl, float rating, String authorName, String publicationDate) {
         this.mTitle = title;
         this.mSectionName = sectionName;
         this.mAuthorName = authorName;
@@ -27,31 +21,31 @@ public class News {
         this.mThumbnailUrl = thumbnailUrl;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return mTitle;
     }
 
-    public String getSectionName() {
+    String getSectionName() {
         return mSectionName;
     }
 
-    public String getAuthorName() {
+    String getAuthorName() {
         return mAuthorName;
     }
 
-    public String getPublicationDate() {
+    String getPublicationDate() {
         return mPublicationDate;
     }
 
-    public float getRating() {
+    float getRating() {
         return mRating;
     }
 
-    public String getUrl() {
+    String getUrl() {
         return mUrl;
     }
 
-    public String getThumbnailUrl() {
+    String getThumbnailUrl() {
         return mThumbnailUrl;
     }
 }

@@ -2,7 +2,6 @@ package com.example.android.newsapp;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.loader.content.AsyncTaskLoader;
@@ -13,7 +12,7 @@ class NewsAsyncTaskLoader extends AsyncTaskLoader<List<News>> {
 
     private String mUrl;
 
-    public NewsAsyncTaskLoader(Context context, String url) {
+    NewsAsyncTaskLoader(Context context, String url) {
         super(context);
         mUrl = url;
     }
@@ -21,7 +20,6 @@ class NewsAsyncTaskLoader extends AsyncTaskLoader<List<News>> {
     @Nullable
     @Override
     public List<News> loadInBackground() {
-        Log.v("NewsAsyncTaskLoader", "TEST: loadInBackground: " + mUrl);
 
         if (TextUtils.isEmpty(mUrl)) {
             return null;
@@ -32,7 +30,6 @@ class NewsAsyncTaskLoader extends AsyncTaskLoader<List<News>> {
 
     @Override
     protected void onStartLoading() {
-        Log.v("NewsAsyncTaskLoader", "TEST: onStartLoading");
         forceLoad();
     }
 }
